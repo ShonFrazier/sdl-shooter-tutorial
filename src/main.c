@@ -9,13 +9,19 @@
 #include "input.h"
 #include "main.h"
 
-App app;
+App    app;
+Entity player;
 
 int main(int argc, char *argv[])
 {
 	memset(&app, 0, sizeof(App));
+	memset(&player, 0, sizeof(Entity));
 
 	initSDL();
+
+	player.x = 100;
+	player.y = 100;
+	player.texture = loadTexture("gfx/player.png");
 
 	atexit(cleanup);
 
@@ -24,6 +30,8 @@ int main(int argc, char *argv[])
 		prepareScene();
 
 		doInput();
+
+		blit(player.texture, player.x, player.y);
 
 		presentScene();
 
