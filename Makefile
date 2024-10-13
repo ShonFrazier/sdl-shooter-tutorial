@@ -8,6 +8,7 @@ all: src/main.c src/init.c src/input.c src/draw.c
   src/init.c \
   src/input.c \
   src/main.c \
+	src/stage.c \
   -o shooter \
   -L/usr/local/lib \
   -lSDL2 -lSDL2_mixer -lSDL2 -lSDL2_image -lSDL2 -lSDL2_ttf -lSDL2 -lm
