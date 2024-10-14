@@ -3,12 +3,16 @@
  */
 
 #include "common.h"
-
 #include "input.h"
 
-void doInput(void)
-{
+void process_keyup(const SDL_KeyboardEvent *event);
+
+void doInput(void) {
 	SDL_Event event;
+
+	if (SDL_PollEvent(NULL)) {
+		printf("event available!\n");
+	}
 
 	while (SDL_PollEvent(&event))
 	{
@@ -18,8 +22,29 @@ void doInput(void)
 				exit(0);
 				break;
 
+			case SDL_KEYUP:
+				printf("key up\n");
+				process_keyup(&event.key);
+				break;
+
 			default:
 				break;
 		}
+	}
+}
+
+bool _should_rotate_corgi = false;
+bool should_rotate_corgi() {
+	return _should_rotate_corgi;
+}
+void set_should_rotate_corgi(bool value) {
+	_should_rotate_corgi = value;
+}
+
+void process_keyup(const SDL_KeyboardEvent *event) {
+	printf("scancode: %d\n", event->keysym.scancode);
+	if ((event->keysym.scancode == SDL_SCANCODE_RETURN)) {
+		printf("Enter pressed\n");
+		set_should_rotate_corgi(true);
 	}
 }

@@ -21,7 +21,7 @@ void presentScene(void)
 	SDL_RenderPresent(app.renderer);
 }
 
-SDL_Texture *loadTexture(char *filename)
+SDL_Texture *loadTexture(const char *filename)
 {
 	SDL_Texture *texture;
 

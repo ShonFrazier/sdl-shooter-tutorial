@@ -8,12 +8,16 @@
 #include "init.h"
 #include "input.h"
 #include "main.h"
+#include "corgipaths.h"
 
 App    app;
 Entity player;
 
-int main(int argc, char *argv[])
-{
+#define forever for(;;)
+
+int current_corgi = 0;
+
+int main(int argc, char *argv[]) {
 	memset(&app, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
 
@@ -21,15 +25,23 @@ int main(int argc, char *argv[])
 
 	player.x = 100;
 	player.y = 100;
-	player.texture = loadTexture("gfx/player.png");
+	player.texture = loadTexture("gfx/animals/corgis/x10/corgi-01.png");
 
 	atexit(cleanup);
 
-	while (1)
-	{
+	forever {
 		prepareScene();
 
 		doInput();
+
+		if (should_rotate_corgi()) {
+			set_should_rotate_corgi(false);
+
+			current_corgi += 1;
+			current_corgi %= get_available_corgi_count();
+
+			player.texture = loadTexture(get_corgi_path(current_corgi));
+		}
 
 		blit(player.texture, player.x, player.y);
 
