@@ -9,7 +9,8 @@
 #include "input.h"
 #include "main.h"
 
-#define PLAYER_MOVE_DELTA 4
+#define PLAYER_MOVE_DELTA 10
+#define forever for(;;)
 
 App    app;
 Entity player;
@@ -27,34 +28,15 @@ int main(int argc, char *argv[])
 	player.x = 100;
 	player.y = 100;
 
-	while (1)
-	{
+	forever {
 		prepareScene();
 
 		doInput();
 
-		if (app.up)
-		{
-			player.y -= 4;
-		}
+		player.x += (app.delta.x * PLAYER_MOVE_DELTA);
+		player.y += (app.delta.y * PLAYER_MOVE_DELTA);
 
-		if (app.down)
-		{
-			player.y += 4;
-		}
-
-		if (app.left)
-		{
-			player.x -= 4;
-		}
-
-		if (app.right)
-		{
-			player.x += 4;
-		}
-
-		player.x += app.delta.x * PLAYER_MOVE_DELTA;
-		player.y += app.delta.y * PLAYER_MOVE_DELTA;
+		// printf("app.delta { x: %d , y: %d }\n", app.delta.x, app.delta.y);
 
 		blit(player.texture, player.x, player.y);
 

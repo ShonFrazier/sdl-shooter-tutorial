@@ -1,35 +1,41 @@
 SOURCES = \
-  src/init.c \
-  src/draw.c \
-  src/input.c \
-  src/main.c \
+	src/init.c \
+	src/draw.c \
+	src/input.c \
+	src/main.c \
 	src/structs.c
 
 HEADERS = \
-  src/main.h \
-  src/input.h \
-  src/defs.h \
-  src/common.h \
-  src/structs.h \
-  src/init.h \
-  src/draw.h
+	src/main.h \
+	src/input.h \
+	src/defs.h \
+	src/common.h \
+	src/structs.h \
+	src/init.h \
+	src/draw.h
 
-INCLUDE_SEARCH = -I /usr/local/include
-LIBRARY_SEARCH = -L /usr/local/lib
+MACOS_ISYSROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+
+INCLUDE_SEARCH = -I /usr/local/include -I /opt/local/include
+LIBRARY_SEARCH = -L /usr/local/lib -L /opt/local/lib
 LIBRARIES = -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
 
 # Ability to 'extend' structs. Use Apple's 'blocks'
 C_FLAGS = -fms-extensions -fblocks
 DEBUG = -g
 
+
 all: shooter
+
+clean:
+	rm ./shooter
 
 run: all
 	./shooter
 
 shooter: $(SOURCES) $(HEADERS)
 	@clang \
-	-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk \
+	-isysroot $(MACOS_ISYSROOT) \
 	-Wl,-search_paths_first -Wl,-headerpad_max_install_names \
 	$(C_FLAGS) \
 	$(DEBUG) \
