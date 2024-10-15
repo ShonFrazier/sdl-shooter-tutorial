@@ -40,8 +40,8 @@ shooter: $(SOURCES) $(HEADERS)
 	$(C_FLAGS) \
 	$(DEBUG) \
 	$(INCLUDE_SEARCH) \
-	$(SOURCES) \
 	$(LIBRARY_SEARCH) \
 	$(LIBRARIES) \
+	$(SOURCES) \
 	-o shooter
 
