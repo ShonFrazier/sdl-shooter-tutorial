@@ -34,3 +34,4 @@ shooter: $(SOURCES) $(HEADERS)
 	$(LIBRARY_SEARCH) \
 	$(LIBRARIES) \
 	-o shooter
+
