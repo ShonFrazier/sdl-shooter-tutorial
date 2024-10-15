@@ -23,6 +23,9 @@ DEBUG = -g
 	
 all: shooter
 
+run: all
+	./shooter
+
 shooter: $(SOURCES) $(HEADERS)
 	@clang \
 	-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk \
