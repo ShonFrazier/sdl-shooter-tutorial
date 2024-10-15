@@ -9,6 +9,8 @@
 #include "input.h"
 #include "main.h"
 
+#define PLAYER_MOVE_DELTA 4
+
 App    app;
 Entity player;
 
@@ -50,6 +52,9 @@ int main(int argc, char *argv[])
 		{
 			player.x += 4;
 		}
+
+		player.x += app.delta.x * PLAYER_MOVE_DELTA;
+		player.y += app.delta.y * PLAYER_MOVE_DELTA;
 
 		blit(player.texture, player.x, player.y);
 

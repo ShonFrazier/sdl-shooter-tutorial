@@ -14,22 +14,22 @@ static void doKeyUp(SDL_KeyboardEvent *event)
 	{
 		if (event->keysym.scancode == SDL_SCANCODE_UP)
 		{
-			app.up = 0;
+			app.delta = vec2_add(app.delta, vec2_multiply(DELTA_UP, DELTA_NEG));
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_DOWN)
 		{
-			app.down = 0;
+			app.delta = vec2_add(app.delta, vec2_multiply(DELTA_DOWN, DELTA_NEG));
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_LEFT)
 		{
-			app.left = 0;
+			app.delta = vec2_add(app.delta, vec2_multiply(DELTA_LEFT, DELTA_NEG));
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_RIGHT)
 		{
-			app.right = 0;
+			app.delta = vec2_add(app.delta, vec2_multiply(DELTA_RIGHT, DELTA_NEG));
 		}
 	}
 }
@@ -40,22 +40,22 @@ static void doKeyDown(SDL_KeyboardEvent *event)
 	{
 		if (event->keysym.scancode == SDL_SCANCODE_UP)
 		{
-			app.up = 1;
+			app.delta = vec2_add(app.delta, DELTA_UP);
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_DOWN)
 		{
-			app.down = 1;
+			app.delta = vec2_add(app.delta, DELTA_DOWN);
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_LEFT)
 		{
-			app.left = 1;
+			app.delta = vec2_add(app.delta, DELTA_LEFT);
 		}
 
 		if (event->keysym.scancode == SDL_SCANCODE_RIGHT)
 		{
-			app.right = 1;
+			app.delta = vec2_add(app.delta, DELTA_RIGHT);
 		}
 	}
 }

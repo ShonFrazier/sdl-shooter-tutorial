@@ -2,7 +2,8 @@ SOURCES = \
   src/init.c \
   src/draw.c \
   src/input.c \
-  src/main.c
+  src/main.c \
+	src/structs.c
 
 HEADERS = \
   src/main.h \
@@ -20,7 +21,7 @@ LIBRARIES = -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
 # Ability to 'extend' structs. Use Apple's 'blocks'
 C_FLAGS = -fms-extensions -fblocks
 DEBUG = -g
-	
+
 all: shooter
 
 run: all
