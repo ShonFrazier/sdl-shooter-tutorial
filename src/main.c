@@ -9,6 +9,7 @@
 #include "input.h"
 #include "main.h"
 #include "corgipaths.h"
+#include "custom_events.h"
 
 App    app;
 Entity player;
@@ -21,7 +22,9 @@ int main(int argc, char *argv[]) {
 	memset(&app, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
 
+
 	initSDL();
+	init_custom_events();
 
 	player.x = 100;
 	player.y = 100;

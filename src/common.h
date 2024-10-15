@@ -2,8 +2,7 @@
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
 
-#ifndef _COMMON_H_
-#define _COMMON_H_
+#pragma once
 
 #include "ctype.h"
 #include "defs.h"
@@ -15,4 +14,4 @@
 #include "structs.h"
 #include "stdbool.h"
 
-#endif
+#include "custom_events.h"
