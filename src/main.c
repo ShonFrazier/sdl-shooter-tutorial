@@ -3,72 +3,61 @@
  */
 
 #include "common.h"
-
 #include "draw.h"
 #include "init.h"
 #include "input.h"
 #include "main.h"
+#include "stage.h"
 
 #define PLAYER_MOVE_DELTA 10
 #define forever for(;;)
+App   app;
+Stage stage;
 
-App    app;
-Entity bullet;
-Entity player;
+static void capFrameRate(long *then, float *remainder);
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+	long  then;
+	float remainder;
+
 	memset(&app, 0, sizeof(App));
-	memset(&player, 0, sizeof(Entity));
-	memset(&bullet, 0, sizeof(Entity));
 
+	//initEntityPool();
 	initSDL();
-
+	initStage();
 	atexit(cleanup);
 
-	player.texture = loadTexture("gfx/player.png");
-	player.x = 100;
-	player.y = 100;
+	then = SDL_GetTicks();
+	remainder = 0;
 
 	forever {
-	bullet.texture = loadTexture("gfx/playerBullet.png");
 		prepareScene();
-
 		doInput();
 
-		player.x += (app.delta.x * PLAYER_MOVE_DELTA);
-		player.y += (app.delta.y * PLAYER_MOVE_DELTA);
-
-		// printf("app.delta { x: %d , y: %d }\n", app.delta.x, app.delta.y);
-
-		if (app.fire && bullet.health == 0)
-		{
-			bullet.x = player.x;
-			bullet.y = player.y;
-			bullet.dx = 16;
-			bullet.dy = 0;
-			bullet.health = 1;
-		}
-
-		bullet.x += bullet.dx;
-		bullet.y += bullet.dy;
-
-		if (bullet.x > SCREEN_WIDTH)
-		{
-			bullet.health = 0;
-		}
-
-		blit(player.texture, player.x, player.y);
-
-		if (bullet.health > 0)
-		{
-			blit(bullet.texture, bullet.x, bullet.y);
-		}
+		app.delegate.logic();
+		app.delegate.draw();
 
 		presentScene();
-
-		SDL_Delay(16);
+		capFrameRate(&then, &remainder);
 	}
 
 	return 0;
+}
+
+static void capFrameRate(long *then, float *remainder) {
+	long wait = 16 + *remainder;
+	wait = 16 + *remainder;
+	*remainder -= (int)*remainder;
+
+	long frameTime = SDL_GetTicks() - *then;
+	wait -= frameTime;
+
+	if (wait < 1) {
+		wait = 1;
+	}
+
+	SDL_Delay(wait);
+
+	*remainder += 0.667;
+	*then = SDL_GetTicks();
 }

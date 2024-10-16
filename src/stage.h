@@ -3,4 +3,4 @@
  */
 #pragma once
 
-void doInput(void);
+void initStage(void);

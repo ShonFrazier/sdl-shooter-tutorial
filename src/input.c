@@ -8,60 +8,22 @@
 extern App app;
 
 static void doKeyUp(SDL_KeyboardEvent *event) {
-	if (event->repeat == 0) {
-		if (event->keysym.scancode == SDL_SCANCODE_UP) {
-			app.delta = vec2_sub_vec2(app.delta, DELTA_UP);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_DOWN) {
-			app.delta = vec2_sub_vec2(app.delta, DELTA_DOWN);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_LEFT) {
-			app.delta = vec2_sub_vec2(app.delta, DELTA_LEFT);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_RIGHT) {
-			app.delta = vec2_sub_vec2(app.delta, DELTA_RIGHT);
-		if (event->keysym.scancode == SDL_SCANCODE_LCTRL)
-		{
-			app.fire = 0;
-		}
+	if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS) {
+		app.keyboard[event->keysym.scancode] = 0;
 	}
 }
 
 static void doKeyDown(SDL_KeyboardEvent *event) {
-	if (event->repeat == 0) {
-		if (event->keysym.scancode == SDL_SCANCODE_UP) {
-			app.delta = vec2_add_vec2(app.delta, DELTA_UP);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_DOWN) {
-			app.delta = vec2_add_vec2(app.delta, DELTA_DOWN);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_LEFT) {
-			app.delta = vec2_add_vec2(app.delta, DELTA_LEFT);
-		}
-
-		if (event->keysym.scancode == SDL_SCANCODE_RIGHT) {
-			app.delta = vec2_add_vec2(app.delta, DELTA_RIGHT);
-
-		if (event->keysym.scancode == SDL_SCANCODE_LCTRL)
-		{
-			app.fire = 1;
-		}
+	if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS) {
+		app.keyboard[event->keysym.scancode] = 1;
 	}
 }
 
-void doInput(void)
-{
+void doInput(void) {
 	SDL_Event event;
 
-	while (SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
 			case SDL_QUIT:
 				exit(0);
 				break;
