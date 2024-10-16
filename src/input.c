@@ -23,6 +23,9 @@ static void doKeyUp(SDL_KeyboardEvent *event) {
 
 		if (event->keysym.scancode == SDL_SCANCODE_RIGHT) {
 			app.delta = vec2_sub_vec2(app.delta, DELTA_RIGHT);
+		if (event->keysym.scancode == SDL_SCANCODE_LCTRL)
+		{
+			app.fire = 0;
 		}
 	}
 }
@@ -43,6 +46,10 @@ static void doKeyDown(SDL_KeyboardEvent *event) {
 
 		if (event->keysym.scancode == SDL_SCANCODE_RIGHT) {
 			app.delta = vec2_add_vec2(app.delta, DELTA_RIGHT);
+
+		if (event->keysym.scancode == SDL_SCANCODE_LCTRL)
+		{
+			app.fire = 1;
 		}
 	}
 }

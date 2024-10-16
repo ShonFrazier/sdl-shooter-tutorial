@@ -13,12 +13,14 @@
 #define forever for(;;)
 
 App    app;
+Entity bullet;
 Entity player;
 
 int main(int argc, char *argv[])
 {
 	memset(&app, 0, sizeof(App));
 	memset(&player, 0, sizeof(Entity));
+	memset(&bullet, 0, sizeof(Entity));
 
 	initSDL();
 
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
 	player.y = 100;
 
 	forever {
+	bullet.texture = loadTexture("gfx/playerBullet.png");
 		prepareScene();
 
 		doInput();
@@ -38,7 +41,29 @@ int main(int argc, char *argv[])
 
 		// printf("app.delta { x: %d , y: %d }\n", app.delta.x, app.delta.y);
 
+		if (app.fire && bullet.health == 0)
+		{
+			bullet.x = player.x;
+			bullet.y = player.y;
+			bullet.dx = 16;
+			bullet.dy = 0;
+			bullet.health = 1;
+		}
+
+		bullet.x += bullet.dx;
+		bullet.y += bullet.dy;
+
+		if (bullet.x > SCREEN_WIDTH)
+		{
+			bullet.health = 0;
+		}
+
 		blit(player.texture, player.x, player.y);
+
+		if (bullet.health > 0)
+		{
+			blit(bullet.texture, bullet.x, bullet.y);
+		}
 
 		presentScene();
 
