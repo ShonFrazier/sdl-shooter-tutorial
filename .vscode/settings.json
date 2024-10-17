@@ -1,6 +1,7 @@
 {
   "files.associations": {
     "input.h": "c",
-    "common.h": "c"
+    "common.h": "c",
+    "list.h": "c"
   }
 }

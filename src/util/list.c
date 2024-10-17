@@ -66,6 +66,25 @@ bool ListAlloc(List **lpp, ListOptions opts) {
   return true;
 }
 
+bool ListAllocDefault(List **lpp) {
+  return ListAlloc(lpp, ListOptionsDefaults);
+}
+
+List *ItrListAlloc(ListOptions opts) {
+  List *lp = NULL;
+  if (ListAlloc(&lp, opts)) {
+    return lp;
+  }
+  return NULL;
+}
+List *ItrListAllocDefault(void) {
+  List *lp = NULL;
+  if (ListAllocDefault(&lp)) {
+    return lp;
+  }
+  return NULL;
+}
+
 bool ListSetComparator(List *list, comparator c) {
   if (list == NULL) {
     return false;
@@ -157,6 +176,22 @@ bool ListStart(List *l, ListNode **lnpp) {
   return true;
 }
 
+ListNode *ItrListStartNode(List *list) {
+  ListNode *np = NULL;
+  if (ListStart(list, &np)) {
+    return np;
+  }
+  return NULL;
+}
+
+void *ItrListStartItem(List *list) {
+  ListNode *np = ItrListStartNode(list);
+  if (np != NULL) {
+    return np->value;
+  }
+  return NULL;
+}
+
 bool ListEnd(List *l, ListNode **lnpp) {
   if (l == NULL || lnpp == NULL || *lnpp == NULL) {
     return false;
@@ -164,6 +199,22 @@ bool ListEnd(List *l, ListNode **lnpp) {
 
   *lnpp = l->tail;
   return true;
+}
+
+ListNode *ItrListEndNode(List *list) {
+  ListNode *np = NULL;
+  if (ListEnd(list, &np)) {
+    return np;
+  }
+  return NULL;
+}
+
+void *ItrListEndItem(List *list) {
+  ListNode *np = ItrListEndNode(list);
+  if (np != NULL) {
+    return np->value;
+  }
+  return NULL;
 }
 
 bool ListItemCount(List *list, int *p) {
@@ -175,6 +226,14 @@ bool ListItemCount(List *list, int *p) {
   return true;
 }
 
+int ItrListItemCount(List *list) {
+  int c = 0;
+  if (ListItemCount(list, &c)) {
+    return c;
+  }
+  return -1;
+}
+
 bool ListNodeParent(ListNode *node, List **lpp) {
   if (node == NULL || lpp == NULL) {
     return false;
@@ -182,6 +241,14 @@ bool ListNodeParent(ListNode *node, List **lpp) {
 
   *lpp = node->owner;
   return true;
+}
+
+List *ItrListNodeParent(ListNode *node) {
+  List *lp = NULL;
+  if (ListNodeParent(node, &lp)) {
+    return lp;
+  }
+  return NULL;
 }
 
 bool ListNodeNext(ListNode *node, ListNode **lnpp) {
@@ -193,6 +260,14 @@ bool ListNodeNext(ListNode *node, ListNode **lnpp) {
   return true;
 }
 
+ListNode *ItrListNodeNext(ListNode *node) {
+  ListNode *np = NULL;
+  if (ListNodeNext(node, &np)) {
+    return np;
+  }
+  return NULL;
+}
+
 bool ListNodePrevious(ListNode *node, ListNode **lnpp) {
   if (node == NULL || lnpp == NULL) {
     return false;
@@ -200,6 +275,32 @@ bool ListNodePrevious(ListNode *node, ListNode **lnpp) {
 
   *lnpp = node->previous;
   return true;
+}
+
+ListNode *ItrListNodePrevious(ListNode *node) {
+  ListNode *np = NULL;
+  if (ListNodePrevious(node, &np)) {
+    return np;
+  }
+  return NULL;
+}
+
+bool ListNodeGetItem(ListNode *node, void **pItem) {
+  if (node == NULL) {
+    return false;
+  }
+
+  *pItem = node->value;
+
+  return true;
+}
+
+void *ItrListNodeGetItem(ListNode *node) {
+  void *item = NULL;
+  if (ListNodeGetItem(node, &item)) {
+    return item;
+  }
+  return NULL;
 }
 
 bool ListContainsPointerOrValue(List *list, void *value) {
@@ -260,3 +361,68 @@ bool ListAddItem(List *list, void *value) {
   return true;
 }
 
+bool ListRemoveNode(ListNode *node) {
+  ListNode *prev = node->previous;
+  ListNode *next = node->next;
+
+  next->previous = prev;
+  prev->next = next;
+
+  return ListNodeFree(&node, NULL, NULL, NULL);
+}
+
+bool ListForEach(List *list, ListEachFn each) {
+  if (list == NULL || each == NULL) {
+    return false;
+  }
+
+  for(ListNode *node = list->head; node != NULL; node = node->next) {
+    each(node->value);
+  }
+
+  return true;
+}
+
+List *ListFilter(List *list, ListFilterFn filter) {
+  if (list == NULL || filter == NULL) {
+    return NULL;
+  }
+
+  List *filtered = ItrListAlloc(list->options);
+
+  for(ListNode *node = list->head; node != NULL; node = node->next) {
+    if (filter(node->value)) {
+      ListAddItem(filtered, node->value);
+    }
+  }
+
+  return filtered;
+}
+
+List *ListMap(List *list, ListMapFn map) {
+  if (list == NULL || map == NULL) {
+    return NULL;
+  }
+
+  List *mapped = ItrListAlloc(list->options);
+
+  for(ListNode *node = list->head; node != NULL; node = node->next) {
+    ListAddItem(mapped, map(node->value));
+  }
+
+  return mapped;
+}
+
+void *ListReduce(List *list, void *initial, ListReduceFn reduce) {
+  if (list == NULL || reduce == NULL) {
+    return NULL;
+  }
+
+  void *result = initial;
+
+  for(ListNode *node = list->head; node != NULL; node = node->next) {
+    result = reduce(result, node->value);
+  }
+
+  return result;
+}

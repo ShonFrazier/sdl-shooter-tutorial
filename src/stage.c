@@ -6,6 +6,7 @@
 
 #include "draw.h"
 #include "stage.h"
+#include "util/list.h"
 
 extern App   app;
 extern Stage stage;
@@ -27,8 +28,9 @@ void initStage(void) {
 	app.delegate.draw = draw;
 
 	memset(&stage, 0, sizeof(Stage));
-	stage.fighterTail = &stage.fighterHead;
-	stage.bulletTail = &stage.bulletHead;
+
+	ListAllocDefault(&(stage.fighters));
+	ListAllocDefault(&(stage.bullets));
 
 	initPlayer();
 
@@ -37,8 +39,7 @@ void initStage(void) {
 
 static void initPlayer() {
 	player = calloc(1, sizeof(Entity));
-	stage.fighterTail->next = player;
-	stage.fighterTail = player;
+	ListAddItem(stage.fighters, player);
 
 	player->x = 100;
 	player->y = 100;
@@ -75,7 +76,6 @@ static void doPlayer(void) {
 	}
 
 	if (app.keyboard[SDL_SCANCODE_LCTRL] && player->reload == 0) {
-		printf("pew!\n");
 		fireBullet();
 	}
 
@@ -85,38 +85,39 @@ static void doPlayer(void) {
 
 static void fireBullet(void) {
 	Entity *bullet = calloc(1, sizeof(Entity));
-	stage.bulletTail->next = bullet;
-	stage.bulletTail = bullet;
 
 	bullet->x = player->x + player->w;
 	bullet->y = player->y + (player->h / 2) - (bullet->h / 2);
 	bullet->dx = PLAYER_BULLET_SPEED;
 	bullet->health = 1;
+
 	bullet->texture = bulletTexture;
 	SDL_QueryTexture(bullet->texture, NULL, NULL, &bullet->w, &bullet->h);
+
+	ListAddItem(stage.bullets, bullet);
 
 	player->reload = 8;
 }
 
 static void doBullets(void) {
-	Entity *prev = &stage.bulletHead;
+	List *filtered = ListFilter(stage.bullets, ^(void *ve) {
+		Entity *e = ve;
+		e->x += e->dx;
+		e->y += e->dy;
 
-	for (Entity *b = stage.bulletHead.next; b != NULL; b = b->next) {
-		b->x += b->dx;
-		b->y += b->dy;
-
-		if (b->x > SCREEN_WIDTH) {
-			if (b == stage.bulletTail) {
-				stage.bulletTail = prev;
-			}
-
-			prev->next = b->next;
-			free(b);
-			b = prev;
+		if (e->x <= SCREEN_WIDTH) {
+			return (bool)true;
+		} else {
+			free(e); e = NULL;
+			return (bool)false;
 		}
+	});
 
-		prev = b;
-	}
+	List *oldBullets = stage.bullets;
+
+	stage.bullets = filtered;
+
+	ListFree(&oldBullets);
 }
 
 static void draw(void) {
@@ -129,7 +130,8 @@ static void drawPlayer(void) {
 }
 
 static void drawBullets(void) {
-	for (Entity *b = stage.bulletHead.next; b != NULL; b = b->next) {
-		blit(b->texture, b->x, b->y);
-	}
+	ListForEach(stage.bullets, ^(void *ve) {
+		Entity *e = ve;
+		blit(e->texture, e->x, e->y);
+	});
 }

@@ -3,9 +3,10 @@
  */
 #pragma once
 
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "defs.h"
-#include "stdbool.h"
+#include "util/list.h"
 
 typedef struct {
 	int x;
@@ -87,14 +88,7 @@ struct Entity {
 	Entity      *next;
 };
 
-
-void initEntityPool();
-Entity *EntityAlloc();
-void EntityFree(Entity *);
-
-void clearAndFree(void *p, int size);
-
 typedef struct {
-	Entity fighterHead, *fighterTail;
-	Entity bulletHead, *bulletTail;
+	List *fighters;
+	List *bullets;
 } Stage;
