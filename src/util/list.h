@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 typedef struct List List;
-typedef struct ListNode ListNode;
+typedef union ListNode ListNode;
 
 typedef enum {
   // The default is no options.

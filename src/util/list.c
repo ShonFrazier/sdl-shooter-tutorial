@@ -3,9 +3,9 @@
 
 // Implementation should change depending on needs. E.g. a sorted list would perform better as a tree.
 typedef enum {
-  ListTypeSinglyLinkedList,
+  ListTypeSinglyLinkedList, // NOTE: do we even need this?
   ListTypeDoublyLinkedList,
-  ListTypeBalancedTree,
+  ListTypeBalancedTree, // TODO: Implement tree
 } ListType;
 
 struct List {
@@ -16,11 +16,23 @@ struct List {
   comparator compare;
 };
 
-struct ListNode {
+struct LNode {
   void *value;
   ListNode *previous;
   ListNode *next;
   List *owner;
+};
+
+// TODO: Implement logic that uses these
+struct TNode {
+  struct LNode;
+  ListNode *left;
+  ListNode *right;
+};
+
+union ListNode {
+  struct LNode;
+  struct TNode;
 };
 
 int pointer_compare(const void *p1, const void *p2) {
@@ -193,6 +205,21 @@ bool ListAddItem(List *list, void *value) {
 
 void ListTests(void) {
   List *list = NULL;
-  bool result = ListAlloc(&list, ListOptionsDefaults);
+  bool result = false;
+
+  result = ListAlloc(&list, ListOptionsDefaults);
+
+  assert(result == true);
+  assert(list != NULL);
+
+  result = ListFree(&list);
+
+  assert(result == true);
+  assert(list == NULL);
+
+  result = ListAlloc(NULL, ListOptionsDefaults);
+
+  assert(result == false);
+
 }
 
