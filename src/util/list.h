@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 typedef struct List List;
-typedef union ListNode ListNode;
+typedef struct ListNode ListNode;
 
 typedef enum {
   // The default is no options.
@@ -43,6 +43,9 @@ bool ListStart(List *, ListNode **);
 // pointer-pointer is NULL, or if the tail of the list is NULL. Note: the tail should only be `NULL` if the head is also
 // `NULL`.
 bool ListEnd(List *, ListNode **);
+
+// Get the current number of items in the list. Returns `false` if either parameter is `NULL`.
+bool ListItemCount(List *, int *);
 
 // Get the `List` to which this node belongs. Returns `false` and sets the `List` pointer-pointer to `NULL` if the
 // supplied node is an orphan.
