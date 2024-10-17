@@ -22,13 +22,18 @@ typedef enum {
   ListOptionSortOnAppend = 0x01 << 2,
 } ListOptions;
 
+typedef int (*comparator)(const void *, const void *);
+
 // The underlying struct is opaque to callers. These functions allow this API to maintain ownership of the underlying
 // memory. Pass a pointer-pointer. (e.g. create a pointer variable `List *l;` and call these methods with `&l` as the
 // parameter. These methods will change the pointer as needed - your pointer will be `NULL` after the list is freed.
 // Returns `false` and sets the pointer to `NULL` if allocation fails. Returns `false` if there as problem freeing any
 // part of the list, but only sets the pointer to `NULL` if deallocation succeeds.
-bool ListAlloc(List **);
+bool ListAlloc(List **, ListOptions);
 bool ListFree(List **);
+
+// Set the comparator used to sort items into the list.
+bool ListSetComparator(List *, comparator);
 
 // Get the `ListNode` at the head of the list. Returns `false` if the list pointer is NULL, if the `ListNode`
 // pointer-pointer is NULL, or if the head of the list is NULL.

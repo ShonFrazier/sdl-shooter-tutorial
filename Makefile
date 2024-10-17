@@ -4,7 +4,8 @@ SOURCES = \
 	src/input.c \
 	src/main.c \
 	src/structs.c \
-	src/stage.c
+	src/stage.c \
+	src/util/list.c
 
 HEADERS = \
 	src/main.h \
@@ -14,7 +15,8 @@ HEADERS = \
 	src/structs.h \
 	src/init.h \
 	src/draw.h \
-	src/stage.h
+	src/stage.h \
+	src/util/list.h
 
 MACOS_ISYSROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
