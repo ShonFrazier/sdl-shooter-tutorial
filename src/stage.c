@@ -1,10 +1,10 @@
-
+#include "util/list.h"
 #include "common.h"
-
+#include "util/memory.h"
 #include "defs.h"
 #include "draw.h"
 #include "stage.h"
-#include "util/list.h"
+#include "entity.h"
 
 extern App   app;
 extern Stage stage;
@@ -41,9 +41,10 @@ void initStage(void) {
 }
 
 static void initPlayer() {
-	player = calloc(1, sizeof(Entity));
+	player = EntityAlloc();
 	ListAddItem(stage.fighters, player);
 
+	player->team = TeamPlayer;
 	player->x = 100;
 	player->y = 100;
 	player->texture = loadTexture("gfx/player.png");
@@ -94,8 +95,10 @@ static void doFighters(void) {
 		e->x += e->dx;
 		e->y += e->dy;
 
-		if (e != player && e->x < -e->w) {
-			free(e); e = NULL;
+		if (e != player && e->x < -e->w || e->health <= 0) {
+			// The list doesn't own the item and it is not
+			// being copied to the new list. Free it.
+			EntityFree(&e);
 			return (bool)false;
 		}
 
@@ -110,7 +113,8 @@ static void doFighters(void) {
 static void spawnEnemies(void) {
 	stage.enemySpawnTimer -= 1;
 	if (stage.enemySpawnTimer <= 0) {
-		Entity *enemy = calloc(1, sizeof(Entity));
+		Entity *enemy = EntityAlloc();
+		enemy->team = TeamPig;
 		enemy->x = SCREEN_WIDTH;
 		enemy->y = rand() % SCREEN_HEIGHT;
 		enemy->texture = enemyTexture;

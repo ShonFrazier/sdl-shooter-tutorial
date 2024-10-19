@@ -1,5 +1,6 @@
 -fms-extensions
 -fblocks
+-I/usr/include
 -I/usr/local/include
 -I/opt/local/include
 -L/usr/local/lib

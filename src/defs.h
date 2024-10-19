@@ -11,3 +11,8 @@
 #define PLAYER_BULLET_SPEED 25
 
 #define MAX_KEYBOARD_KEYS 350
+
+typedef enum {
+  TeamPlayer,
+  TeamPig
+} TeamSide;

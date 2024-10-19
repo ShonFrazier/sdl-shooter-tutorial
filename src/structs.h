@@ -1,7 +1,7 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
+#pragma clang diagnostic pop
 
 #include <stdbool.h>
 #include <SDL2/SDL.h>
@@ -71,22 +71,6 @@ typedef struct {
 	Delegate      delegate;
 	int           keyboard[MAX_KEYBOARD_KEYS];
 } App;
-
-typedef struct Entity Entity;
-struct Entity {
-	bool         fromPool;
-	bool         used;
-	float        x;
-	float        y;
-	int          w;
-	int          h;
-	float        dx;
-	float        dy;
-	int          health;
-	int          reload;
-	SDL_Texture *texture;
-	Entity      *next;
-};
 
 typedef struct {
 	List *fighters;

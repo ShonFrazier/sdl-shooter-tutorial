@@ -1,22 +1,28 @@
 SOURCES = \
-	src/init.c \
-	src/draw.c \
-	src/input.c \
-	src/main.c \
+	src/util/list.c \
+	src/util/collision.c \
+	src/util/memory.c \
+	src/entity.c \
 	src/structs.c \
 	src/stage.c \
-	src/util/list.c
+	src/draw.c \
+	src/input.c \
+	src/init.c \
+	src/main.c \
 
 HEADERS = \
-	src/main.h \
+	src/util/list.h \
+	src/util/collision.h \
+	src/util/memory.h \
+	src/entity.h \
+	src/structs.h \
+	src/stage.h \
+	src/draw.h \
 	src/input.h \
+	src/init.h \
+	src/main.h \
 	src/defs.h \
 	src/common.h \
-	src/structs.h \
-	src/init.h \
-	src/draw.h \
-	src/stage.h \
-	src/util/list.h
 
 TEST_SOURCES = \
 	src/util/tests/CuTest.c \
@@ -81,4 +87,3 @@ $(TEST_TARGET_NAME): $(TEST_SOURCES) $(TEST_HEADERS)
 	$(LIBRARIES) \
 	$(TEST_SOURCES) \
 	-o $(TEST_TARGET_NAME) && echo Done.
-
