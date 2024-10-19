@@ -91,4 +91,6 @@ struct Entity {
 typedef struct {
 	List *fighters;
 	List *bullets;
+	List *enemies;
+	int enemySpawnTimer;
 } Stage;

@@ -1,9 +1,7 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
 
 #include "common.h"
 
+#include "defs.h"
 #include "draw.h"
 #include "stage.h"
 #include "util/list.h"
@@ -16,12 +14,16 @@ static void draw(void);
 static void initPlayer(void);
 static void fireBullet(void);
 static void doPlayer(void);
+static void doFighters(void);
 static void doBullets(void);
 static void drawPlayer(void);
 static void drawBullets(void);
+static void drawFighters(void);
+static void spawnEnemies(void);
 
 static Entity      *player;
 static SDL_Texture *bulletTexture;
+static SDL_Texture *enemyTexture;
 
 void initStage(void) {
 	app.delegate.logic = ^() { logic(); };
@@ -35,6 +37,7 @@ void initStage(void) {
 	initPlayer();
 
 	bulletTexture = loadTexture("gfx/playerBullet.png");
+	enemyTexture = loadTexture("gfx/enemy.png");
 }
 
 static void initPlayer() {
@@ -49,7 +52,9 @@ static void initPlayer() {
 
 static void logic(void) {
 	doPlayer();
+	doFighters();
 	doBullets();
+	spawnEnemies();
 }
 
 static void doPlayer(void) {
@@ -83,11 +88,48 @@ static void doPlayer(void) {
 	player->y += player->dy;
 }
 
+static void doFighters(void) {
+	List *filtered = ListFilter(stage.fighters, ^(void *ve) {
+		Entity *e = ve;
+		e->x += e->dx;
+		e->y += e->dy;
+
+		if (e != player && e->x < -e->w) {
+			free(e); e = NULL;
+			return (bool)false;
+		}
+
+		return (bool)true;
+	});
+
+	List *old = stage.fighters;
+	stage.fighters = filtered;
+	ListFree(&old);
+}
+
+static void spawnEnemies(void) {
+	stage.enemySpawnTimer -= 1;
+	if (stage.enemySpawnTimer <= 0) {
+		Entity *enemy = calloc(1, sizeof(Entity));
+		enemy->x = SCREEN_WIDTH;
+		enemy->y = rand() % SCREEN_HEIGHT;
+		enemy->texture = enemyTexture;
+
+		SDL_QueryTexture(enemy->texture, NULL, NULL, &enemy->w, &enemy->h);
+
+		enemy->dx = -(2 + (rand() % 4));
+
+		stage.enemySpawnTimer = 30 + (rand() % 60);
+
+		ListAddItem(stage.fighters, enemy);
+	}
+}
+
 static void fireBullet(void) {
 	Entity *bullet = calloc(1, sizeof(Entity));
 
 	bullet->x = player->x + player->w;
-	bullet->y = player->y + (player->h / 2) - (bullet->h / 2);
+	bullet->y = player->y + ((int)(player->h / 2) - (int)(bullet->h / 2));
 	bullet->dx = PLAYER_BULLET_SPEED;
 	bullet->health = 1;
 
@@ -113,16 +155,15 @@ static void doBullets(void) {
 		}
 	});
 
-	List *oldBullets = stage.bullets;
-
+	List *old = stage.bullets;
 	stage.bullets = filtered;
-
-	ListFree(&oldBullets);
+	ListFree(&old);
 }
 
 static void draw(void) {
 	drawPlayer();
 	drawBullets();
+	drawFighters();
 }
 
 static void drawPlayer(void) {
@@ -131,6 +172,13 @@ static void drawPlayer(void) {
 
 static void drawBullets(void) {
 	ListForEach(stage.bullets, ^(void *ve) {
+		Entity *e = ve;
+		blit(e->texture, e->x, e->y);
+	});
+}
+
+static void drawFighters(void) {
+	ListForEach(stage.fighters, ^(void *ve) {
 		Entity *e = ve;
 		blit(e->texture, e->x, e->y);
 	});
