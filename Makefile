@@ -32,11 +32,12 @@ TEST_HEADERS = \
 APP_TARGET_NAME = shooter
 TEST_TARGET_NAME = tester
 
-MACOS_ISYSROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+MACOS_ISYSROOT = -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
 INCLUDE_SEARCH = -I /usr/local/include -I /opt/local/include
 LIBRARY_SEARCH = -L /usr/local/lib -L /opt/local/lib
 LIBRARIES = -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_ttf -lm
+COMPILE_FLAGS_TXT = $(shell cat compile_flags.txt)
 
 # Ability to 'extend' structs. Use Apple's 'blocks'
 C_FLAGS = -fms-extensions -fblocks
@@ -55,8 +56,9 @@ run: $(APP_TARGET_NAME)
 $(APP_TARGET_NAME): $(SOURCES) $(HEADERS)
 	@echo Building...
 	@clang \
-	-isysroot $(MACOS_ISYSROOT) \
+	$(MACOS_ISYSROOT) \
 	-Wl,-search_paths_first -Wl,-headerpad_max_install_names \
+	$(COMPILE_FLAGS_TXT) \
 	$(C_FLAGS) \
 	$(DEBUG) \
 	$(INCLUDE_SEARCH) \
