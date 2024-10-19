@@ -14,8 +14,8 @@ typedef struct {
 } Vec2;
 
 typedef struct {
-	void (*logic)(void);
-	void (*draw)(void);
+	void (^logic)(void);
+	void (^draw)(void);
 } Delegate;
 
 Vec2 vec2_add_vec2(Vec2 v1, Vec2 v2);

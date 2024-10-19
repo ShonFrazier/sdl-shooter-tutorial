@@ -22,7 +22,7 @@ typedef enum {
   ListOptionSortOnAppend = 0x01 << 2,
 } ListOptions;
 
-typedef int (*comparator)(const void *, const void *);
+typedef int (^comparator)(const void *, const void *);
 
 // The underlying struct is opaque to callers. These functions allow this API to maintain ownership of the underlying
 // memory. Pass a pointer-pointer. (e.g. create a pointer variable `List *l;` and call these methods with `&l` as the
@@ -81,13 +81,9 @@ void *ItrListNodeGetItem(ListNode *);
 bool ListAddItem(List *, void *);
 bool ListRemoveNode(ListNode *);
 
-typedef void (*ListEachFn_f)(void *item);
 typedef void (^ListEachFn)(void *item);
-typedef bool (*ListFilterFn_f)(void *item);
 typedef bool (^ListFilterFn)(void *item);
-typedef void* (*ListMapFn_f)(void *item);
 typedef void* (^ListMapFn)(void *item);
-typedef void* (*ListReduceFn_f)(void *currentResult, void *item);
 typedef void* (^ListReduceFn)(void *currentResult, void *item);
 
 bool ListForEach(List *, ListEachFn);

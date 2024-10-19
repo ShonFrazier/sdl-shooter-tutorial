@@ -24,8 +24,8 @@ static Entity      *player;
 static SDL_Texture *bulletTexture;
 
 void initStage(void) {
-	app.delegate.logic = logic;
-	app.delegate.draw = draw;
+	app.delegate.logic = ^() { logic(); };
+	app.delegate.draw = ^() { draw(); };
 
 	memset(&stage, 0, sizeof(Stage));
 

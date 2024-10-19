@@ -39,13 +39,13 @@ union uListNode {
 };
 */
 
-int pointer_compare(const void *p1, const void *p2) {
+comparator pointer_compare = ^(const void *p1, const void *p2) {
   if (p1 <  p2) { return -1; }
   if (p1 == p2) { return  0; }
   if (p1  > p2) { return  1; }
 
   return ~0;
-}
+};
 
 bool ListAlloc(List **lpp, ListOptions opts) {
   if (lpp == NULL) {
@@ -91,7 +91,7 @@ bool ListSetComparator(List *list, comparator c) {
   }
 
   if (c == NULL) {
-    list->compare = &pointer_compare;
+    list->compare = pointer_compare;
   } else {
     list->compare = c;
   }
