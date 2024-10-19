@@ -1,0 +1,7 @@
+-fms-extensions
+-fblocks
+-I/usr/local/include
+-I/opt/local/include
+-L/usr/local/lib
+-L/opt/local/lib
+-Wno-pragma-once-outside-header
