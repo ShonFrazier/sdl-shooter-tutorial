@@ -5,6 +5,7 @@
 #include "draw.h"
 #include "stage.h"
 #include "entity.h"
+#include <stdio.h>
 
 extern App   app;
 extern Stage stage;
@@ -45,6 +46,7 @@ static void initPlayer() {
 	ListAddItem(stage.fighters, player);
 
 	player->team = TeamPlayer;
+	player->health = 1;
 	player->x = 100;
 	player->y = 100;
 	player->texture = loadTexture("gfx/player.png");
@@ -52,8 +54,8 @@ static void initPlayer() {
 }
 
 static void logic(void) {
-	doPlayer();
 	doFighters();
+	doPlayer();
 	doBullets();
 	spawnEnemies();
 }
@@ -81,7 +83,7 @@ static void doPlayer(void) {
 		player->dx = PLAYER_SPEED;
 	}
 
-	if (app.keyboard[SDL_SCANCODE_LCTRL] && player->reload == 0) {
+	if (app.keyboard[SDL_SCANCODE_SPACE] && player->reload == 0) {
 		fireBullet();
 	}
 
@@ -115,6 +117,7 @@ static void spawnEnemies(void) {
 	if (stage.enemySpawnTimer <= 0) {
 		Entity *enemy = EntityAlloc();
 		enemy->team = TeamPig;
+		enemy->health = 1;
 		enemy->x = SCREEN_WIDTH;
 		enemy->y = rand() % SCREEN_HEIGHT;
 		enemy->texture = enemyTexture;
@@ -123,15 +126,16 @@ static void spawnEnemies(void) {
 
 		enemy->dx = -(2 + (rand() % 4));
 
-		stage.enemySpawnTimer = 30 + (rand() % 60);
+		stage.enemySpawnTimer = 50 + (rand() % 60);
 
 		ListAddItem(stage.fighters, enemy);
 	}
 }
 
 static void fireBullet(void) {
-	Entity *bullet = calloc(1, sizeof(Entity));
+	Entity *bullet = EntityAlloc();
 
+	bullet->team = TeamPlayer;
 	bullet->x = player->x + player->w;
 	bullet->y = player->y + ((int)(player->h / 2) - (int)(bullet->h / 2));
 	bullet->dx = PLAYER_BULLET_SPEED;
@@ -145,17 +149,34 @@ static void fireBullet(void) {
 	player->reload = 8;
 }
 
-static void doBullets(void) {
-	List *filtered = ListFilter(stage.bullets, ^(void *ve) {
-		Entity *e = ve;
-		e->x += e->dx;
-		e->y += e->dy;
+static bool bulletHitFighter(Entity *bullet) {
+	for(
+		ListNode *node = ItrListStartNode(stage.fighters);
+		node != NULL;
+		node = ItrListNodeNext(node)
+	) {
+		Entity *fighter = (Entity *)ItrListNodeGetItem(node);
+		if (fighter->team != bullet->team && fighter->doesCollideWith(bullet)) {
+			bullet->health = 0;
+			fighter->health = 0;
 
-		if (e->x <= SCREEN_WIDTH) {
-			return (bool)true;
-		} else {
-			free(e); e = NULL;
+			return true;
+		}
+	}
+	return false;
+}
+
+static void doBullets(void) {
+	List *filtered = ListFilter(stage.bullets, ^(void *ep) {
+		Entity *bullet = ep;
+		bullet->x += bullet->dx;
+		bullet->y += bullet->dy;
+
+		if (bulletHitFighter(bullet) || bullet->x > SCREEN_WIDTH) {
+			free(bullet); bullet = NULL;
 			return (bool)false;
+		} else {
+			return (bool)true;
 		}
 	});
 

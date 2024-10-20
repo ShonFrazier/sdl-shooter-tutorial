@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
 
@@ -168,7 +169,7 @@ bool ListFree(List **lpp) {
 }
 
 bool ListStart(List *l, ListNode **lnpp) {
-  if (l == NULL || lnpp == NULL || *lnpp == NULL) {
+  if (l == NULL || lnpp == NULL) {
     return false;
   }
 
@@ -378,6 +379,22 @@ bool ListForEach(List *list, ListEachFn each) {
 
   for(ListNode *node = list->head; node != NULL; node = node->next) {
     each(node->value);
+  }
+
+  return true;
+}
+
+bool ListForEachShortCircuit(List *list, ListEachFn each, ListEachExitTestFn exit) {
+  if (list == NULL || each == NULL) {
+    return false;
+  }
+
+  for(ListNode *node = list->head; node != NULL; node = node->next) {
+    each(node->value);
+    bool result = false;
+    if (exit(node->value, &result)) {
+      return true;
+    }
   }
 
   return true;

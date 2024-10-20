@@ -1,4 +1,7 @@
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
+#pragma clang diagnostic pop
 
 #include <stdbool.h>
 
@@ -82,11 +85,13 @@ bool ListAddItem(List *, void *);
 bool ListRemoveNode(ListNode *);
 
 typedef void (^ListEachFn)(void *item);
+typedef bool (^ListEachExitTestFn)(void *item, void *return_value);
 typedef bool (^ListFilterFn)(void *item);
 typedef void* (^ListMapFn)(void *item);
 typedef void* (^ListReduceFn)(void *currentResult, void *item);
 
 bool ListForEach(List *, ListEachFn);
+bool ListForEachShortCircuit(List *, ListEachFn, ListEachExitTestFn);
 List *ListFilter(List *, ListFilterFn);
 List *ListMap(List *, ListMapFn);
 void *ListReduce(List *, void *initial, ListReduceFn);

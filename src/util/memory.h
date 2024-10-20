@@ -10,5 +10,5 @@ extern free_and_clear_block free_and_clear;
   typedef void (^ Type ## FreeBlk)(Type **); \
   extern Type ## FreeBlk Type ## Free;
 
-#define ImplFreeBlkType(Type) \
-  Type ## FreeBlk Type ## Free = ^(Type **pp) { free_and_clear((void **)pp); };
+#define ImplFreeBlkType(Type, PreFree, PostFree) \
+  Type ## FreeBlk Type ## Free = ^(Type **pp) { PreFree; free_and_clear((void **)pp); PostFree; };

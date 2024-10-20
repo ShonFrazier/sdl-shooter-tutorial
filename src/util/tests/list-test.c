@@ -1,4 +1,5 @@
 #include "list-test.h"
+#include "CuTest.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -50,7 +51,7 @@ void TestListAllocFree(CuTest *tc) {
   CuAssertFalse(tc, result);
 }
 
-int int_cmp(const void *p1, const void *p2) {
+comparator int_cmp = ^(const void *p1, const void *p2) {
   const int *i1 = p1;
   const int *i2 = p2;
   if (*i1 <  *i2) { return -1; }
@@ -58,7 +59,7 @@ int int_cmp(const void *p1, const void *p2) {
   if (*i1  > *i2) { return  1; }
 
   return IntMin();
-}
+};
 
 // Just to make sure we don't futz with the above function too much
 void TestIntComparator(CuTest *tc) {
@@ -118,7 +119,7 @@ void TestListAdd(CuTest *tc) {
   int dup_values[] = {1,2,3,4,5,5,4,3,2,1};
 
   result = ListAlloc(&list, ListOptionUniqueItems);
-  result = ListSetComparator(list, &int_cmp);
+  result = ListSetComparator(list, int_cmp);
   for (int i=0; i<10; i+=1) {
     result = ListAddItem(list, &dup_values[i]);
     if (i < 5) {
@@ -131,4 +132,15 @@ void TestListAdd(CuTest *tc) {
   result = ListItemCount(list, &count);
   CuAssertTrue(tc, result);
   CuAssertIntEquals(tc, 5, count);
+
+  ListNode *node;
+  node = ItrListStartNode(list);
+  CuAssertPtrNotNull(tc, node);
+
+  count = 0;
+  while(node != NULL) {
+    count += 1;
+    node = ItrListNodeNext(node);
+  }
+
 }

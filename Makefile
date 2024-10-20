@@ -53,14 +53,15 @@ DEBUG = -g
 all: $(APP_TARGET_NAME)
 
 clean:
+	@echo 🧹 Cleaning...
 	@rm -rf ./$(APP_TARGET_NAME){,.dSYM} ./$(TEST_TARGET_NAME){,.dSYM}
-	@echo Done.
+	@echo Done. ✅
 
 run: $(APP_TARGET_NAME)
 	./$(APP_TARGET_NAME)
 
 $(APP_TARGET_NAME): $(SOURCES) $(HEADERS)
-	@echo Building...
+	@echo 🛠️ Building...
 	@clang \
 	$(MACOS_ISYSROOT) \
 	-Wl,-search_paths_first -Wl,-headerpad_max_install_names \
@@ -71,7 +72,7 @@ $(APP_TARGET_NAME): $(SOURCES) $(HEADERS)
 	$(LIBRARY_SEARCH) \
 	$(LIBRARIES) \
 	$(SOURCES) \
-	-o $(APP_TARGET_NAME) && echo Done.
+	-o $(APP_TARGET_NAME) && echo Done. ✅
 
 test: $(TEST_TARGET_NAME)
 	./$(TEST_TARGET_NAME)
@@ -79,7 +80,7 @@ test: $(TEST_TARGET_NAME)
 $(TEST_TARGET_NAME): $(TEST_SOURCES) $(TEST_HEADERS)
 	@echo Building...
 	@clang \
-	-isysroot $(MACOS_ISYSROOT) \
+	$(MACOS_ISYSROOT) \
 	-Wl,-search_paths_first -Wl,-headerpad_max_install_names \
 	$(C_FLAGS) \
 	$(INCLUDE_SEARCH) \
