@@ -1,28 +1,34 @@
 SOURCES = \
 	src/util/list.c \
-	src/util/collision.c \
-	src/util/memory.c \
-	src/entity.c \
-	src/structs.c \
-	src/stage.c \
-	src/draw.c \
-	src/input.c \
-	src/init.c \
-	src/main.c \
+  src/util/memory.c \
+  src/util/base.c \
+  src/util/collision.c \
+  src/entity.c \
+  src/stage.c \
+  src/init.c \
+  src/draw.c \
+  src/input.c \
+  src/main.c \
+  src/vec2.c \
+  src/app.c \
+
 
 HEADERS = \
-	src/util/list.h \
-	src/util/collision.h \
-	src/util/memory.h \
-	src/entity.h \
-	src/structs.h \
-	src/stage.h \
-	src/draw.h \
-	src/input.h \
-	src/init.h \
-	src/main.h \
-	src/defs.h \
-	src/common.h \
+  src/main.h \
+  src/vec2.h \
+  src/input.h \
+  src/defs.h \
+  src/util/collision.h \
+  src/util/list.h \
+  src/util/util.h \
+  src/util/memory.h \
+  src/util/base.h \
+  src/app.h \
+  src/common.h \
+  src/stage.h \
+  src/entity.h \
+  src/init.h \
+  src/draw.h \
 
 TEST_SOURCES = \
 	src/util/tests/CuTest.c \

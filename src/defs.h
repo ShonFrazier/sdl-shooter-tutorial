@@ -1,8 +1,7 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
+#pragma clang diagnostic pop
 
 #define SCREEN_WIDTH  1280
 #define SCREEN_HEIGHT 720

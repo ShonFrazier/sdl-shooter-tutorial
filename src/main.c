@@ -2,17 +2,17 @@
  * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
  */
 
+#include "app.h"
 #include "common.h"
 #include "draw.h"
 #include "init.h"
 #include "input.h"
 #include "main.h"
 #include "stage.h"
+#include "util/util.h"
 
 #define PLAYER_MOVE_DELTA 10
 #define forever for(;;)
-App   app;
-Stage stage;
 
 static void capFrameRate(long *then, float *remainder);
 
@@ -20,24 +20,24 @@ int main(int argc, char *argv[]) {
 	long  then;
 	float remainder;
 
-	memset(&app, 0, sizeof(App));
+	App *app = AppAlloc();
+	initSDL(app);
 
-	//initEntityPool();
-	initSDL();
-	initStage();
+	Stage *stage = StageAlloc(app);
+
 	atexit(cleanup);
 
 	then = SDL_GetTicks();
 	remainder = 0;
 
 	forever {
-		prepareScene();
-		doInput();
+		prepareScene(app->renderer);
+		doInput(app);
 
-		app.delegate.logic();
-		app.delegate.draw();
+		app->delegate.logic();
+		app->delegate.draw();
 
-		presentScene();
+		presentScene(app->renderer);
 		capFrameRate(&then, &remainder);
 	}
 
@@ -46,8 +46,7 @@ int main(int argc, char *argv[]) {
 
 static void capFrameRate(long *then, float *remainder) {
 	long wait = 16 + *remainder;
-	wait = 16 + *remainder;
-	*remainder -= (int)*remainder;
+	*remainder -= SDL_floorf(*remainder);
 
 	long frameTime = SDL_GetTicks() - *then;
 	wait -= frameTime;

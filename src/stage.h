@@ -1,6 +1,17 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
+#pragma clang diagnostic pop
 
-void initStage(void);
+#include "util/util.h"
+#include "app.h"
+
+typedef struct {
+  App *app;
+	List *fighters;
+	List *bullets;
+	List *enemies;
+	int enemySpawnTimer;
+} Stage;
+
+Stage *StageAlloc(App *);

@@ -1,25 +1,21 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
-
 #include "common.h"
 #include "input.h"
+#include "app.h"
 
-extern App app;
 
-static void doKeyUp(SDL_KeyboardEvent *event) {
+static void doKeyUp(App *app, SDL_KeyboardEvent *event) {
 	if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS) {
-		app.keyboard[event->keysym.scancode] = 0;
+		app->keyboard[event->keysym.scancode] = 0;
 	}
 }
 
-static void doKeyDown(SDL_KeyboardEvent *event) {
+static void doKeyDown(App *app, SDL_KeyboardEvent *event) {
 	if (event->repeat == 0 && event->keysym.scancode < MAX_KEYBOARD_KEYS) {
-		app.keyboard[event->keysym.scancode] = 1;
+		app->keyboard[event->keysym.scancode] = 1;
 	}
 }
 
-void doInput(void) {
+void doInput(App *app) {
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event)) {
@@ -29,11 +25,11 @@ void doInput(void) {
 				break;
 
 			case SDL_KEYDOWN:
-				doKeyDown(&event.key);
+				doKeyDown(app, &event.key);
 				break;
 
 			case SDL_KEYUP:
-				doKeyUp(&event.key);
+				doKeyUp(app, &event.key);
 				break;
 
 			default:

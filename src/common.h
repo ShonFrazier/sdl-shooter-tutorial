@@ -1,8 +1,7 @@
-/*
- * Copyright (C) 2015-2018,2022 Parallel Realities. All rights reserved.
- */
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
 #pragma once
+#pragma clang diagnostic pop
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
@@ -10,4 +9,3 @@
 #include <string.h>
 #include <ctype.h>
 #include "defs.h"
-#include "structs.h"

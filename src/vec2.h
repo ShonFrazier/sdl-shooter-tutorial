@@ -1,22 +1,7 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wpragma-once-outside-header"
-#pragma once
-#pragma clang diagnostic pop
-
-#include <stdbool.h>
-#include <SDL2/SDL.h>
-#include "defs.h"
-#include "util/list.h"
-
 typedef struct {
 	int x;
 	int y;
 } Vec2;
-
-typedef struct {
-	void (^logic)(void);
-	void (^draw)(void);
-} Delegate;
 
 Vec2 vec2_add_vec2(Vec2 v1, Vec2 v2);
 Vec2 vec2_add_int (Vec2 v1, int i);
@@ -58,23 +43,3 @@ static const Vec2 Directions[] = {
 };
 
 Vec2 DirectionVector(Direction d);
-
-typedef struct {
-	SDL_Renderer *renderer;
-	SDL_Window   *window;
-	Vec2          delta;
-	int           up;
-	int           down;
-	int           left;
-	int           right;
-	int           fire;
-	Delegate      delegate;
-	int           keyboard[MAX_KEYBOARD_KEYS];
-} App;
-
-typedef struct {
-	List *fighters;
-	List *bullets;
-	List *enemies;
-	int enemySpawnTimer;
-} Stage;

@@ -3,7 +3,7 @@
 #pragma once
 #pragma clang diagnostic pop
 
-#include "app.h"
-
-void initSDL(App *app);
-void cleanup(void);
+#include "base.h"
+#include "collision.h"
+#include "list.h"
+#include "memory.h"

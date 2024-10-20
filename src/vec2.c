@@ -1,5 +1,4 @@
-#include "structs.h"
-#include "stdbool.h"
+#include "vec2.h"
 
 Vec2 vec2_add_vec2(Vec2 v1, Vec2 v2) {
   Vec2 new = { .x = v1.x + v2.x, .y = v1.y + v2.y };
